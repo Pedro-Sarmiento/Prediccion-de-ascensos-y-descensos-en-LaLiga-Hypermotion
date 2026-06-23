@@ -59,11 +59,10 @@ Ejecutar los notebooks en orden numérico:
 
 | Fuente | Cobertura | Estado en el repo |
 |---|---|---|
-| **football-data.co.uk** | SP2 2010/11 – 2025/26 (16 temp., 7 337 partidos) | Versionado en `data/raw/footballdata/` |
-| **Transfermarkt** — clasificaciones tras cada jornada | 16 temp. × 42 jornadas (672 CSV) | No versionado — obtener manualmente |
-| **Transfermarkt** — plantillas con valor de mercado | 16 temp. × ~22 equipos × ~25 jugadores | No versionado — obtener manualmente |
+| **football-data.co.uk** | SP2 2010/11 – 2025/26 (16 temp., 7 337 partidos)
+| **Transfermarkt** — clasificaciones tras cada jornada | 16 temp. × 42 jornadas (672 CSV) 
+| **Transfermarkt** — plantillas con valor de mercado | 16 temp. × ~22 equipos × ~25 jugadores
 
-Los datos de Transfermarkt no se versionan por su volumen y por respeto a la fuente original. El notebook `01_feature_engineering.ipynb` documenta las URLs y la estructura esperada para quien desee reconstruirlos.
 
 ## Licencia
 
