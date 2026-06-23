@@ -1,0 +1,179 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ---------------------------------------------------------------------------
+# Entornos virtuales
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.python-version.bak
+
+# ---------------------------------------------------------------------------
+# Tooling de tests / lint / type-check
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# ---------------------------------------------------------------------------
+# Notebooks
+# ---------------------------------------------------------------------------
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# ---------------------------------------------------------------------------
+# Sistema operativo
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---------------------------------------------------------------------------
+# IDEs
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---------------------------------------------------------------------------
+# Modelos entrenados y artefactos pesados (se regeneran)
+# ---------------------------------------------------------------------------
+models/*.joblib
+models/*.pkl
+models/*.pt
+models/*.pth
+models/*.h5
+models/*.onnx
+models/*.bin
+!models/.gitkeep
+
+# ---------------------------------------------------------------------------
+# Logs y resultados de ejecución
+# ---------------------------------------------------------------------------
+*.log
+logs/
+mlruns/
+wandb/
+
+# ---------------------------------------------------------------------------
+# Credenciales y variables de entorno
+# ---------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# ---------------------------------------------------------------------------
+# Datos: solo se versionan los 16 CSV de football-data (punto de entrada).
+# El resto (Transfermarkt scrapeado, logos, features derivadas) se regenera.
+# ---------------------------------------------------------------------------
+data/raw/transfermarkt/
+data/raw/logos/
+data/features/
+data/interim/
+data/processed/
+data/economia/
+data/outputs/
+data/historical/
+
+# Outputs locales de los notebooks (simulaciones MC, heatmaps, figuras)
+notebooks/data/
+
+# ---------------------------------------------------------------------------
+# Reports y modelos: regenerables desde notebooks
+# ---------------------------------------------------------------------------
+reports/figures/
+reports/tables/
+reports/metrics/
+models/
+
+# ---------------------------------------------------------------------------
+# Documentación interna y PDFs (solo README.md viaja al repo público)
+# ---------------------------------------------------------------------------
+*.md
+!README.md
+*.pdf
+*.docx
+*.tex
+*.parquet
+*.json
+
+# ---------------------------------------------------------------------------
+# Streamlit / FastAPI
+# ---------------------------------------------------------------------------
+.streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Azure / Docker
+# ---------------------------------------------------------------------------
+.azure/
+*.azurePubxml
+docker-compose.override.yml
+
+# ---------------------------------------------------------------------------
+# Caché de scraping (regenerable)
+# ---------------------------------------------------------------------------
+.cache/
+*.cache
+
+# ---------------------------------------------------------------------------
+# Scripts iniciales de exploración (LinkedIn) — no se versionan en el repo TFM.
+# Permanecen en disco como referencia local. Se añadirán selectivamente si
+# alguno se reutiliza durante la migración a src/tfm_segunda/.
+# ---------------------------------------------------------------------------
+/scripts/
+
+# ---------------------------------------------------------------------------
+# Artefactos derivados de los scripts iniciales (regenerables; fuera del repo)
+# ---------------------------------------------------------------------------
+# Gráficos LinkedIn
+/data/outputs/
+
+# Duplicado de data/raw/ (mismos partidos con una columna 'Div' extra)
+/data/historical/
+
+# Clasificaciones calculadas por descargar_datos.py (se recalculan en el pipeline)
+/data/raw/clasificacion_*.csv
+
+# Excel agregados por clasificacion_jornada.py
+/data/raw/clasificaciones_jornada_*.xlsx
+
+# Consolidado histórico con muchas columnas vacías
+/data/raw/partidos_SP2_historico.csv
+
+config/+
+notebooks/data/simulations/cortes/+

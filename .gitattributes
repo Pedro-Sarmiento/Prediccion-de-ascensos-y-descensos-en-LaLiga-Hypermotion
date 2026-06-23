@@ -1,0 +1,48 @@
+# Normalización de finales de línea — LF en repo, autocrlf desactivado.
+* text=auto eol=lf
+
+# Archivos de Python: siempre LF
+*.py text eol=lf
+*.pyi text eol=lf
+
+# Configuración y datos: siempre LF
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
+
+# Shell y scripts
+*.sh text eol=lf
+Makefile text eol=lf
+Dockerfile text eol=lf
+
+# Binarios — no tocar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.xlsx binary
+*.xls binary
+*.parquet binary
+*.feather binary
+*.joblib binary
+*.pkl binary
+*.pt binary
+*.pth binary
+*.onnx binary
+*.h5 binary
+
+# Notebooks: tratar como JSON pero NO normalizar (Jupyter es delicado con los finales de línea)
+*.ipynb text eol=lf merge=jupyter
+
+# Configuración de linguist (GitHub) para reflejar mejor el lenguaje del repo
+notebooks/** linguist-documentation
+data/** linguist-vendored
+docs/** linguist-documentation
+ARCHIVE/** linguist-vendored

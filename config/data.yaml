@@ -1,0 +1,127 @@
+# =============================================================================
+# Configuración de datos: fuentes, temporadas, partición temporal
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Fuentes primarias
+# -----------------------------------------------------------------------------
+sources:
+  footballdata:
+    base_url: "https://www.football-data.co.uk/mmz4281"
+    competition_code: SP2
+    raw_subdir: footballdata
+    request_timeout: 30
+    encoding_fallbacks: ["utf-8", "cp1252", "latin-1"]
+
+  transfermarkt:
+    base_url: "https://www.transfermarkt.es"
+    competition_path_overview: "/segunda-division/startseite/wettbewerb/ES2"
+    competition_path_standings: "/segunda-division/spieltagtabelle/wettbewerb/ES2"
+    competition_path_fixtures:  "/segunda-division/gesamtspielplan/wettbewerb/ES2"
+    raw_standings_subdir: transfermarkt/standings
+    raw_squads_subdir:    transfermarkt/squads
+    raw_clubs_subdir:     transfermarkt/clubs    # listado de equipos por temporada
+    user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    accept_language: "es-ES,es;q=0.9"
+    rate_limit_seconds: 1.5      # Pausa entre requests
+    request_timeout: 30
+    max_retries: 4
+    backoff_seconds: 5
+
+# -----------------------------------------------------------------------------
+# Temporadas
+# -----------------------------------------------------------------------------
+# Identificador = año de inicio (formato Transfermarkt).
+# 2010 = temporada 2010/11
+seasons:
+  scope_start: 2010                # 2010/11 - introduccion playoff ascenso
+  scope_end:   2025                # 2025/26 - temporada en curso
+  current:     2025                # temporada actualmente disputandose
+  matchdays_per_season: 42         # formato 22 equipos: 42 jornadas
+
+# -----------------------------------------------------------------------------
+# Particion temporal - sin solape, sin fugas
+# -----------------------------------------------------------------------------
+# Cada bloque se define por la temporada de inicio y la ultima incluida.
+splits:
+  train:
+    start: 2010                    # 2010/11
+    end:   2019                    # 2019/20 (pre-COVID-vacio)
+    description: "10 temporadas estables, anteriores a la pandemia."
+
+  validation:
+    start: 2020                    # 2020/21 (COVID, publico restringido)
+    end:   2022                    # 2022/23
+    description: "3 temporadas post-pandemia, seleccion de hiperparametros."
+
+  test:
+    start: 2023                    # 2023/24
+    end:   2024                    # 2024/25
+    description: "Hold-out final para reportar metricas en la memoria."
+
+  demo:
+    start: 2025                    # 2025/26 en curso
+    end:   2025
+    description: "Temporada actual - solo para la app, NO para evaluacion."
+
+# -----------------------------------------------------------------------------
+# Que jornadas bajar de Transfermarkt
+# -----------------------------------------------------------------------------
+# El scraper bajara las clasificaciones de TODAS las jornadas y la lista de
+# equipos por temporada. Los J38/J42 ya cacheados se reutilizan.
+scraping:
+  standings:
+    enabled: true
+    matchdays: "all"               # all | [38, 42] | lista explicita
+    skip_if_cached: true
+    expected_teams_per_season: 22  # validacion: tabla debe tener 22 filas
+
+  squads:
+    enabled: true
+    snapshot: season_start          # season_start | mid_season | both
+    detail: per_player              # per_player | aggregate
+    expected_teams_per_season: 22
+    skip_if_cached: true
+
+  fixtures:
+    enabled: false                  # los partidos los tomamos de football-data
+    note: "Football-data.co.uk cubre resultados; no se duplica con TM."
+
+# -----------------------------------------------------------------------------
+# Validacion de esquema (pandera) sobre cada CSV cargado
+# -----------------------------------------------------------------------------
+schema:
+  partidos:
+    required_columns: [Date, HomeTeam, AwayTeam, FTHG, FTAG, FTR]
+    ftr_allowed: [H, D, A]
+    date_formats: ["%d/%m/%Y", "%d/%m/%y"]
+
+  standings:
+    required_columns: [Pos, Equipo, G, E, P, Pts]
+
+  squads:
+    required_columns: [jugador, posicion, edad, nacionalidad, valor_mercado_eur]
+
+# -----------------------------------------------------------------------------
+# Features pre-partido - que construir y con que ventana
+# -----------------------------------------------------------------------------
+features:
+  recent_form_windows: [3, 5, 10]
+  elo:
+    initial_rating: 1500
+    k_factor: 20
+    home_advantage: 65
+  rest_days:
+    enabled: true
+  market_odds:
+    enabled: true                   # cuotas pre-partido de football-data
+  market_value:
+    enabled: true                   # se activa tras scrape de squads
+    aggregations: [total, top_5, median, age_mean]
+
+# -----------------------------------------------------------------------------
+# Filiales y normalizacion de nombres
+# -----------------------------------------------------------------------------
+team_handling:
+  exclude_filial_promotions: true   # filiales no pueden ascender (se marcan)
+  normalize_team_names: true        # diccionario en src/tfm_segunda/data/team_normalization.py

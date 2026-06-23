@@ -1,0 +1,55 @@
+# =============================================================================
+# Configuración global del proyecto TFM
+# =============================================================================
+# Se carga al inicio de cualquier entry point con `tfm_segunda.config.load()`.
+# Las rutas se resuelven relativas a la raíz del repositorio.
+
+project:
+  name: laliga-hypermotion-predictor
+  competition: SP2          # Segunda División española (LaLiga Hypermotion)
+  competition_id_tm: ES2    # Identificador en Transfermarkt
+  competition_label: "LaLiga Hypermotion"
+
+paths:
+  data:
+    raw:        data/raw
+    interim:    data/interim
+    processed:  data/processed
+    features:   data/features
+  models:       models
+  reports:
+    figures:    reports/figures
+    tables:     reports/tables
+    metrics:    reports/metrics
+  logs:         logs
+
+random:
+  seed: 42                  # Semilla global — propagada a numpy, sklearn, torch, lgbm, xgboost
+
+logging:
+  level: INFO               # DEBUG | INFO | WARNING | ERROR
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  rich_console: true        # Usar rich para output bonito en terminal
+  to_file: true
+  file_path: logs/tfm.log
+
+execution:
+  n_jobs: -1                # CPU paralela (-1 = todos los cores)
+  cache_dir: .cache
+  raise_on_data_warning: false    # Si pandera detecta warnings, ¿abortar?
+
+# Hooks de validación para evitar leaks temporales accidentales en el pipeline
+safety_checks:
+  enforce_temporal_split: true     # Verifica que test > val > train en fechas
+  forbid_postmatch_features: true  # Bloquea features derivadas de stats del propio partido
+  min_matches_per_team: 5          # Equipos con menos partidos quedan fuera de splits
+
+# Modelos a incluir en train_all / evaluate
+models_to_run:
+  - poisson
+  - logistic
+  - random_forest
+  - xgboost
+  - lightgbm
+  - mlp
+  # - neural_net    # Descomentado solo si nn dependencies estan instaladas
